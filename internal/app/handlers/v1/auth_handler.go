@@ -75,7 +75,7 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 	}
 
 	// Criar o link para criação de senha
-	link := "http://localhost:5173/create-password?token=" + token
+	link := utils.URL_CREATE_PASS + token
 
 	// Enviar o email
 	emailSender := email.NewEmailSender()

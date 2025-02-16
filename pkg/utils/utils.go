@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -8,6 +9,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var URL_CREATE_PASS = os.Getenv("BASE_URL") + "/create-password?token="
 
 var fixedGUID = "123e4567-e89b-12d3-a456-426614174000" // Substitua por seu GUID fixo
 

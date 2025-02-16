@@ -43,7 +43,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	// Criar o link para criação de senha
-	link := "http://localhost:5173/create-password?token=" + token
+	link := utils.URL_CREATE_PASS + token
 
 	// Enviar o email
 	emailSender := email.NewEmailSender()
@@ -110,7 +110,7 @@ func (h *UserHandler) UserExistsByCPF(c *gin.Context) {
 		}
 
 		// Criar o link para criação de senha
-		link := "http://localhost:5173/create-password?token=" + token
+		link := utils.URL_CREATE_PASS + token
 
 		// Enviar o email
 		emailSender := email.NewEmailSender()
