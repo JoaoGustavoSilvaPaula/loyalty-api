@@ -36,3 +36,6 @@ ehthumbs.db
 # Ignore arquivos e diretórios específicos de Go
 /bin/
 /pkg/
+
+# Ignore arquivos de ambiente
+.env
