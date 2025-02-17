@@ -18,9 +18,13 @@ type App struct {
 func NewApp() *App {
 	db := mongodb.GetDatabase("loyalty")
 	userCollection := db.Collection("users")
+
 	userService := services.NewUserService(userCollection)
+	extractService := services.NewExtractService()
+
 	userHandler := v1.NewUserHandler(userService)
 	authHandler := v1.NewAuthHandler(userService)
+	extractHandler := v1.NewExtractHandler(extractService)
 
 	router := gin.Default()
 
@@ -32,21 +36,22 @@ func NewApp() *App {
 
 	router.Use(cors.New(config))
 
-	v1 := router.Group("/api/v1")
+	v1Route := router.Group("/api/v1")
 	{
-		v1.POST("/users", userHandler.CreateUser)
-		v1.GET("/users/:id", middleware.AuthMiddleware(), userHandler.GetUser)
-		v1.PUT("/users/:id", middleware.AuthMiddleware(), userHandler.UpdateUser)
-		v1.DELETE("/users/:id", middleware.AuthMiddleware(), userHandler.DeleteUser)
-		v1.GET("/users/exists/:cpf", userHandler.UserExistsByCPF)
-		v1.POST("/users/create-password", userHandler.CreatePassword)
+		v1Route.POST("/users", userHandler.CreateUser)
+		v1Route.GET("/users/:id", middleware.AuthMiddleware(), userHandler.GetUser)
+		v1Route.PUT("/users/:id", middleware.AuthMiddleware(), userHandler.UpdateUser)
+		v1Route.DELETE("/users/:id", middleware.AuthMiddleware(), userHandler.DeleteUser)
+		v1Route.GET("/users/exists/:cpf", userHandler.UserExistsByCPF)
+		v1Route.POST("/users/create-password", userHandler.CreatePassword)
 
-		auth := v1.Group("/auth")
+		auth := v1Route.Group("/auth")
 		{
 			auth.POST("/login", authHandler.Login)
 			auth.POST("/forgot-password", authHandler.ForgotPassword)
 			auth.GET("/validate-token", authHandler.ValidateToken)
 		}
+		v1Route.GET("/extract", extractHandler.ExtractData)
 	}
 
 	return &App{

@@ -1,0 +1,38 @@
+# Ignore os binários gerados
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Ignore os diretórios de dependências
+vendor/
+Godeps/
+
+# Ignore os arquivos de build
+/bin/
+/out/
+/build/
+
+# Ignore os arquivos do IDE
+.idea/
+.vscode/
+.project
+.classpath
+.cproject
+
+# Ignore arquivos temporários do sistema
+*~
+*.swp
+*.swo
+.DS_Store
+
+# Ignore arquivos de configuração do sistema operacional
+Thumbs.db
+ehthumbs.db
+
+# Ignore arquivos e diretórios específicos de Go
+/bin/
+/pkg/
