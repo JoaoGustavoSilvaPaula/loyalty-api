@@ -22,8 +22,8 @@ func NewAuthHandler(userService *services.UserService) *AuthHandler {
 
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req struct {
-		CPF      string `json:"cpf"`
-		Password string `json:"password"`
+		CPF      string `json:"cpf" binding:"required"`
+		Password string `json:"password" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -53,7 +53,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 	var req struct {
-		CPF string `json:"cpf"`
+		CPF string `json:"cpf" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {

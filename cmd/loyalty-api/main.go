@@ -1,8 +1,18 @@
 package main
 
-import "github.com/joaogustavosp/loyalty-api/internal/app"
+import (
+	"os"
+
+	"github.com/joaogustavosp/loyalty-api/internal/app"
+)
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Porta padrão
+	}
+
 	app := app.NewApp()
-	app.Run(":8080")
+	app.Run(":" + port)
+
 }

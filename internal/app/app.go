@@ -30,7 +30,7 @@ func NewApp() *App {
 
 	// Configurar CORS
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
+	config.AllowOrigins = []string{"https://seusite.com"} // Restringir origens permitidas
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
 

@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"os"
 	"strconv"
 	"strings"
@@ -12,18 +14,26 @@ import (
 
 var URL_CREATE_PASS = os.Getenv("BASE_URL") + "/create-password?token="
 
-var fixedGUID = "123e4567-e89b-12d3-a456-426614174000" // Substitua por seu GUID fixo
-
 func HashPassword(password string) (string, error) {
-	passwordWithGUID := password + fixedGUID
-	bytes, err := bcrypt.GenerateFromPassword([]byte(passwordWithGUID), bcrypt.DefaultCost)
-	return string(bytes), err
+	salt := make([]byte, 16)
+	_, err := rand.Read(salt)
+	if err != nil {
+		return "", err
+	}
+	hash, err := bcrypt.GenerateFromPassword(append([]byte(password), salt...), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(append(salt, hash...)), nil
 }
 
 func CheckPasswordHash(password, hash string) bool {
-	passwordWithGUID := password + fixedGUID
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(passwordWithGUID))
-	return err == nil
+	decodedHash, err := base64.StdEncoding.DecodeString(hash)
+	if err != nil {
+		return false
+	}
+	salt := decodedHash[:16]
+	return bcrypt.CompareHashAndPassword(decodedHash[16:], append([]byte(password), salt...)) == nil
 }
 
 func IsValidCPF(cpf string) bool {
@@ -58,7 +68,7 @@ func IsValidCPF(cpf string) bool {
 	return string(cpf[9]) == strconv.Itoa(firstDigit) && string(cpf[10]) == strconv.Itoa(secondDigit)
 }
 
-var jwtKey = []byte("169f1ae6-4b24-4750-a3c4-1222cc69eee2-69efb153-527c-40a4-8029-12c04c6585ae")
+var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 func GenerateJWTWithExpiration(userID interface{}, expirationTime time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

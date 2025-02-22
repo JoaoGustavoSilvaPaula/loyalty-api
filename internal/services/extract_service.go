@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-
 	"github.com/joaogustavosp/loyalty-api/internal/models"
 )
 
@@ -18,6 +17,11 @@ func NewExtractService() *ExtractService {
 }
 
 func (s *ExtractService) ExtractData(url string) ([]models.ProductInvoice, models.Invoice, error) {
+	// Validar a URL
+	if !strings.HasPrefix(url, "https://") {
+		return nil, models.Invoice{}, fmt.Errorf("URL deve usar HTTPS")
+	}
+
 	// Realizar a requisição HTTP
 	resp, err := http.Get(url)
 	if err != nil {
